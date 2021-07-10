@@ -11,13 +11,14 @@ const port = process.env.port || 3000
 
 // Define the schema
 const typeDefs = readFileSync(
-    join(__dirname, 'lib', 'schema.graphql'),
+    //join(__dirname, 'lib', 'schema.graphql'),
+    join(__dirname, 'lib', 'schema-mockup.graphql'),
     'utf-8'
   )
-  const schema = makeExecutableSchema({ typeDefs, resolvers })
+const schema = makeExecutableSchema({ typeDefs, resolvers })
 
 // Inject graphqlHTTP in our app
-app.use('/api', graphqlHTTP({
+app.use('/graphql', graphqlHTTP({
   schema: schema,
   rootValue: resolvers,
   graphiql: true
@@ -25,5 +26,5 @@ app.use('/api', graphqlHTTP({
 
 // Up our server
 app.listen(port, () => {
-  console.log(`Server is listening at http://localhost:${port}/api`);
+  console.log(`Server is listening at http://localhost:${port}/graphql`);
 })

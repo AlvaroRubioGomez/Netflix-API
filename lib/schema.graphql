@@ -1,34 +1,39 @@
 interface ContentOverview {
+    video_id: ID!
     content_title: String!
-    banner_img: String!
+    miniature_img: String!
     continue_watching_url: String!
 }
 
-type ContentSearch implements ContentOverview {
+type SearchResults implements ContentOverview {
+    # ContentOverview
+    video_id: ID!
     content_title: String!
-    banner_img: String!
+    miniature_img: String!
     continue_watching_url: String!
 }
 
-# interface ContentDetails implements ContentOverview {
-#     # ContentOverview 
-#     content_title: String!
-#     banner_img: String!
-#     continue_watching_url: String!
-#     # ContentDetails
-#     percentage_of_coincidence: String
-#     year: String
-#     player_feature_badge: String
-#     description: String
-#     created_by: [String]
-#     cast: [String]
-#     scriptwriter: [String]
-#     gender: [String]
-#     belongs_to: [String]
-#     age_rating_img: String
-#     age_rating_reason: [String]
-#     maturity_description: String
-# }
+interface ContentDetails implements ContentOverview {
+    # ContentOverview 
+    video_id: ID!
+    content_title: String!
+    miniature_img: String!
+    continue_watching_url: String!
+    # ContentDetails
+    banner_img: String!
+    percentage_of_coincidence: String
+    year: String
+    player_feature_badge: String
+    description: String!
+    created_by: [String]
+    cast: [String]
+    scriptwriter: [String]
+    gender: [String]
+    belongs_to: [String]
+    age_rating_img: String
+    age_rating_reason: [String]
+    maturity_description: String
+}
 
 # interface SimilarDetails {
 #     banner_img: String
@@ -63,28 +68,30 @@ type ContentSearch implements ContentOverview {
 #     season_number: String
 # }
 
-# type MovieDetails implements ContentDetails {
-#     # ContentOverview
-#     content_title: String!
-#     banner_img: String!
-#     continue_watching_url: String!
-#     # ContentDetails
-#     percentage_of_coincidence: String
-#     year: String
-#     player_feature_badge: String
-#     description: String
-#     created_by: [String]
-#     cast: [String]
-#     scriptwriter: [String]
-#     gender: [String]
-#     belongs_to: [String]
-#     age_rating_img: String
-#     age_rating_reason: [String]
-#     maturity_description: String
-#     # Movie
-#     content_duration: String  
-#     similars: [SimilarMovie]  
-# }
+type MovieDetails implements ContentDetails & ContentOverview {
+    # ContentOverview
+    video_id: ID!
+    content_title: String!
+    miniature_img: String!
+    continue_watching_url: String!
+    # ContentDetails
+    banner_img: String!
+    percentage_of_coincidence: String
+    year: String
+    player_feature_badge: String
+    description: String
+    created_by: [String]
+    cast: [String]
+    scriptwriter: [String]
+    genres: [String]
+    belongs_to: [String]
+    age_rating: String
+    age_rating_reason: [String]
+    maturity_description: String
+    # Movie
+    content_duration: String  
+    #similars: [SimilarMovie]  
+}
 
 # type Episode {
 #     episode_index: String
@@ -123,10 +130,11 @@ type ContentSearch implements ContentOverview {
 # }
 
 type Query {
-#   "Return a number of movies and tv-shows based on a keyword"
-#   getSearch(n: number, keyword: String!): [ContentOverview]
   "Return all movies and tv-shows"
-  getAll: [ContentSearch]
-  #"Return all details of a specific tv-show or a movie"
-  #Not sure
+  getAll: [SearchResults]
+  "Return all movies and tv-shows that matches with certain keyword"
+  getSearch(keyword: String!): [SearchResults]
+  "Return an overview of a specific movie or tv-show by ID"
+  getContentOverview(video_id: ID!): SearchResults
+  #"Return the details of a specific movie or tv-show by ID"  
 }

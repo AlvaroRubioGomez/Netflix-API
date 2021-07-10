@@ -1,0 +1,141 @@
+interface ContentOverview {
+    video_id: ID!
+    content_title: String!
+    miniature_img: String!
+    continue_watching_url: String!
+}
+
+type SearchResults implements ContentOverview {
+    # ContentOverview
+    video_id: ID!
+    content_title: String!
+    miniature_img: String!
+    continue_watching_url: String!
+}
+
+interface ContentDetails implements ContentOverview {
+    # ContentOverview 
+    video_id: ID!
+    content_title: String!
+    miniature_img: String!
+    continue_watching_url: String!
+    # ContentDetails
+    banner_img: String!
+    percentage_of_coincidence: Int
+    year: Int
+    player_feature_badge: String
+    description: String!
+    created_by: [String]
+    cast: [String]
+    scriptwriter: [String]
+    genres: [String]
+    belongs_to: [String]
+    age_rating: String
+    age_rating_reason: [String]
+    maturity_description: String
+}
+
+interface SimilarDetails {
+    video_id: ID!
+    banner_img: String
+    percentage_of_coincidence: Int
+    age_rating: String
+    year: Int
+    description: String    
+}
+
+type SimilarMovie implements SimilarDetails {
+    # SimilarDetails
+    video_id: ID!
+    banner_img: String
+    percentage_of_coincidence: Int
+    age_rating: String
+    year: Int
+    description: String 
+    # SimilarMovie
+    content_duration: String
+}
+
+type SimilarTvShow implements SimilarDetails {
+    # SimilarDetails
+    video_id: ID!
+    banner_img: String
+    percentage_of_coincidence: Int
+    age_rating: String
+    year: Int
+    description: String 
+    # SimilarTvShow
+    season_number: String
+}
+
+type MovieDetails implements ContentDetails & ContentOverview {
+    # ContentOverview
+    video_id: ID!
+    content_title: String!
+    miniature_img: String!
+    continue_watching_url: String!
+    # ContentDetails
+    banner_img: String!
+    percentage_of_coincidence: Int
+    year: Int
+    player_feature_badge: String
+    description: String!
+    created_by: [String]
+    cast: [String]
+    scriptwriter: [String]
+    genres: [String]
+    belongs_to: [String]
+    age_rating: String
+    age_rating_reason: [String]
+    maturity_description: String
+    # Movie
+    content_duration: String  
+    similars: [SimilarMovie]  
+}
+
+type Episode {
+    episode_index: String
+    episode_title: String
+    episode_duration: String
+    episode_description: String
+    episode_watch_url: String
+}
+
+type Season {
+    episodes: [Episode]
+}
+
+type TvShowDetails implements ContentDetails & ContentOverview {
+    # ContentOverview
+    video_id: ID!
+    content_title: String!
+    miniature_img: String!
+    continue_watching_url: String!
+    # ContentDetails
+    banner_img: String!
+    percentage_of_coincidence: Int
+    year: Int
+    player_feature_badge: String
+    description: String!
+    created_by: [String]
+    cast: [String]
+    scriptwriter: [String]
+    genres: [String]
+    belongs_to: [String]
+    age_rating: String
+    age_rating_reason: [String]
+    maturity_description: String
+    # TvShow
+    season_number: String
+    seasons: [Season]
+    similars: [SimilarTvShow]
+}
+
+type Query {
+  "Return all movies and tv-shows"
+  getContentAll: [SearchResults]
+  "Return all movies and tv-shows that matches with certain keyword"
+  getContentSearch(items: Int, page: Int, keyword: String!): [SearchResults]  
+  "Return the details of a specific movie or tv-show by ID"  
+  getContentDetails(video_id: ID!): MovieDetails
+}
