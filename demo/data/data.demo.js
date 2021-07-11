@@ -1,4 +1,4 @@
-const { movies } = require('./movies.mock-up');
+const { movies } = require('./movies.demo');
 //const { similarMovies } = require('./similar-movies.mock-up');
 
 // Array with all mock-up data of movies and tv-shows (200 items)

@@ -1,4 +1,4 @@
-const { fullData, overviewData } = require('./data/data.mock-up');
+const { fullData, overviewData } = require('../data/data.demo');
 
 module.exports = {
   getContentAll: () => {

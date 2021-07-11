@@ -4,21 +4,20 @@ const express = require('express')
 const { graphqlHTTP } = require('express-graphql')
 const { readFileSync } = require('fs')
 const { join } = require('path')
-const resolvers = require('./lib/resolvers')
+const resolvers = require('./demo/lib/resolvers')
 
 const app = express()
 const port = process.env.port || 3000
 
-// Define the schema
-const typeDefs = readFileSync(
-    //join(__dirname, 'lib', 'schema.graphql'),
-    join(__dirname, 'lib', 'schema-mockup.graphql'),
+// Define the demo schema
+const typeDefs = readFileSync(    
+    join(__dirname, 'demo', 'lib', 'schema.demo.graphql'),
     'utf-8'
   )
 const schema = makeExecutableSchema({ typeDefs, resolvers })
 
 // Inject graphqlHTTP in our app
-app.use('/graphql', graphqlHTTP({
+app.use('/graphql/demo', graphqlHTTP({
   schema: schema,
   rootValue: resolvers,
   graphiql: true
@@ -26,5 +25,5 @@ app.use('/graphql', graphqlHTTP({
 
 // Up our server
 app.listen(port, () => {
-  console.log(`Server is listening at http://localhost:${port}/graphql`);
+  console.log(`Server is listening at http://localhost:${port}/graphql/demo`);
 })
