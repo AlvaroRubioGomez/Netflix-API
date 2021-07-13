@@ -1,78 +1,89 @@
 interface ContentOverview {
+    video_id: ID!
     content_title: String!
-    banner_img: String!
+    miniature_img: String!
     continue_watching_url: String!
 }
 
-interface ContentDetails {
+type SearchResults implements ContentOverview {
+    # ContentOverview
+    video_id: ID!
+    content_title: String!
+    miniature_img: String!
+    continue_watching_url: String!
+}
+
+interface ContentDetails {    
+    video_id: ID!    
+    banner_img: String!
     percentage_of_coincidence: String
-    year: String
+    year: Int
     player_feature_badge: String
-    description: String
+    description: String!
     created_by: [String]
     cast: [String]
     scriptwriter: [String]
-    gender: [String]
+    genres: [String]
     belongs_to: [String]
-    age_rating_img: String
+    age_rating: String
     age_rating_reason: [String]
     maturity_description: String
 }
 
+union SimilarContent = SimilarMovie | SimilarTvShow
+
 interface SimilarDetails {
+    video_id: ID!
     banner_img: String
     percentage_of_coincidence: String
-    age_rating_img: String
-    year: String
-    description: String
-    video_id: String
+    age_rating: String
+    year: Int
+    description: String    
 }
 
 type SimilarMovie implements SimilarDetails {
     # SimilarDetails
+    video_id: ID!
     banner_img: String
     percentage_of_coincidence: String
-    age_rating_img: String
-    year: String
-    description: String
-    video_id: String
+    age_rating: String
+    year: Int
+    description: String 
     # SimilarMovie
     content_duration: String
 }
 
 type SimilarTvShow implements SimilarDetails {
     # SimilarDetails
+    video_id: ID!
     banner_img: String
     percentage_of_coincidence: String
-    age_rating_img: String
-    year: String
-    description: String
-    video_id: String
+    age_rating: String
+    year: Int
+    description: String 
     # SimilarTvShow
-    season_number: String
+    number_of_seasons: Int
 }
 
-type MovieDetails implements ContentOverview, ContentDetails {
-    # ContentOverview
-    content_title: String!
-    banner_img: String!
-    continue_watching_url: String!
+type MovieDetails implements ContentDetails {   
     # ContentDetails
+    video_id: ID!
+    banner_img: String!
     percentage_of_coincidence: String
-    year: String
+    year: Int
     player_feature_badge: String
-    description: String
+    description: String!
     created_by: [String]
     cast: [String]
     scriptwriter: [String]
-    gender: [String]
+    genres: [String]
     belongs_to: [String]
-    age_rating_img: String
+    age_rating: String
     age_rating_reason: [String]
     maturity_description: String
     # Movie
     content_duration: String  
-    similars: [SimilarMovie]  
+    similars: [SimilarContent]  
 }
 
 type Episode {
@@ -84,36 +95,37 @@ type Episode {
 }
 
 type Season {
+    season_title: String!
     episodes: [Episode]
 }
 
-type TvShowDetails implements ContentOverview, ContentDetails {
-     # ContentOverview
-    content_title: String!
-    banner_img: String!
-    continue_watching_url: String!
+type TvShowDetails implements ContentDetails {   
     # ContentDetails
+    video_id: ID!
+    banner_img: String!
     percentage_of_coincidence: String
-    year: String
+    year: Int
     player_feature_badge: String
-    description: String
+    description: String!
     created_by: [String]
     cast: [String]
     scriptwriter: [String]
-    gender: [String]
+    genres: [String]
     belongs_to: [String]
-    age_rating_img: String
+    age_rating: String
     age_rating_reason: [String]
     maturity_description: String
     # TvShow
-    season_number: String
+    number_of_seasons: Int
     seasons: [Season]
-    similars: [SimilarTvShow]
+    similars: [SimilarContent]
 }
 
 type Query {
-  "Return a number of movies and tv-shows based on a keyword"
-  getSearch(n: number, keyword: String!): [ContentOverview]
-  #"Return all details of a specific tv-show or a movie"
-  #Not sure
+  "Return all movies and tv-shows"
+  getAll: [SearchResults]
+  "Return all movies and tv-shows that matches with certain keyword"
+  getSearchResults(offset: Int, limit: Int, keyword: String!): [SearchResults]  
+  "Return the details of a specific movie or tv-show by ID"  
+  getSearchDetails(video_id: ID!): ContentDetails
 }
